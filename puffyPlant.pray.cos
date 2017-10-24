@@ -112,21 +112,21 @@ endm
 scrp 2 4 24404 9
 	doif pnxt 0 = -1
 *	no part 1,
-		subv ov10 rand 25 31
+		subv ov10 31
 		pat: dull 1 "puff-plant" 4 0 ov10 -1
 	elif pnxt 1 = -1
 *	no part 2
-		subv ov10 rand 25 31
+		subv ov10 rand 0 31
 		pat: dull 2 "puff-plant" rand 5 15 0 ov10 -1
 	elif pnxt 2 = -1
 *	no part 3
-		subv ov10 rand 25 31
+		subv ov10 31
 		pat: dull 3 "puff-plant" rand 5 15 0 ov10 -1
 	elif pnxt 3 = -1
-		subv ov10 rand 25 31
+		subv ov10 31
 		pat: dull 4 "puff-plant" rand 5 15 0 ov10 -1
 	elif pnxt 4 = -1
-		subv ov10 rand 25 31
+		subv ov10 31
 		pat: dull 5 "puff-plant" rand 5 15 0 ov10 -1
 	elif pnxt 5 = -1
 		subv ov10 61
