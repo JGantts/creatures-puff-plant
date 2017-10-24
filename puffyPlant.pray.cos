@@ -18,10 +18,14 @@ elas 1
 accg 0.2
 aero 10
 fric 95
+tick 1
+
 setv va00 game "CreatorY"
+*setv va00 mopy
 subv va00 hght
 mvto game "CreatorX" va00
-tick 1
+*mvto mopx va00
+
 
 scrp 2 3 24404 9
 	doif pose = 0
@@ -89,10 +93,12 @@ scrp 2 3 24404 9
 			inst
 * calculate location of new plant agent
 			setv va00 posl
-			subv va00 35
+			subv va00 30
 			setv va01 post
 			subv va01 0
 			new: comp 2 4 24404 "puff-plant" 50 0 292
+*			current height
+			setv ov10 0
 			tick 20
 			mvto va00 va01
 			kill ownr
@@ -105,20 +111,34 @@ endm
 
 scrp 2 4 24404 9
 	doif pnxt 0 = -1
-*	no part 1, 	
-		pat: dull 1 "puff-plant" rand 4 15 0 -31 -1
+*	no part 1,
+		subv ov10 rand 25 31
+		pat: dull 1 "puff-plant" rand 4 15 0 ov10 -1
 	elif pnxt 1 = -1
 *	no part 2
-		pat: dull 2 "puff-plant" rand 4 15 0 -62 -1
+		subv ov10 rand 25 31
+		pat: dull 2 "puff-plant" rand 4 15 0 ov10 -1
 	elif pnxt 2 = -1
 *	no part 3
-		pat: dull 3 "puff-plant" rand 4 15 0 -93 -1
+		subv ov10 rand 25 31
+		pat: dull 3 "puff-plant" rand 4 15 0 ov10 -1
 	elif pnxt 3 = -1
-		pat: dull 4 "puff-plant" rand 4 15 0 -124 -1
+		subv ov10 rand 25 31
+		pat: dull 4 "puff-plant" rand 4 15 0 ov10 -1
 	elif pnxt 4 = -1
-		pat: dull 5 "puff-plant" rand 4 15 0 -155 -1
+		subv ov10 rand 25 31
+		pat: dull 5 "puff-plant" rand 4 15 0 ov10 -1
 	elif pnxt 5 = -1
-		pat: dull 6 "puff-plant" rand 4 15 0 -186 -1
+		subv ov10 61
+		pat: dull 6 "puff-plant" 36 0 ov10 -2
+		part 6
+		setv va10 0
+		reps 4
+			dbg: outv pose
+			addv va10 1
+			pose va10
+			wait 40
+		repe
 	endi
 endm
 
