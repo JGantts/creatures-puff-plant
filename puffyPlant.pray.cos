@@ -77,6 +77,7 @@ scrp 2 3 24404 9
 		endi
 		stop
 	else
+		wait rand 0 100
 *	we have no feather
 ********************
 ***timer for growing***
@@ -88,6 +89,15 @@ scrp 2 3 24404 9
 			tick 20
 			stop
 		endi
+		setv va40 0
+		inst
+		esee 2 4 24404
+			addv va40 1
+		next
+		doif va40 > 10
+			kill ownr
+		endi
+		slow
 		doif rtyp room ownr >= 5 and rtyp room ownr <= 7
 * room type is soil
 			inst
@@ -185,7 +195,8 @@ scrp 2 4 24404 9
 			targ ownr
 			part ov11
 			pose 5
-			tick 0
+			wait rand 0 1000
+			kill ownr
 		endi
 	else
 *	state "has flower"
