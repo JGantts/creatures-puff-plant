@@ -162,6 +162,9 @@ scrp 2 4 24404 9
 			addv va21 10
 			setv va24 plne
 			addv va24 100
+			doif tmvt va20 va21 = 0
+				kill ownr
+			endi
 *			loop
 			inst
 			reps 100
