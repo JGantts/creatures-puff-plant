@@ -16,52 +16,70 @@ attr va00
 perm 64
 elas 1
 accg 0.2
+aero 10
 fric 95
 setv va00 game "CreatorY"
 subv va00 hght
 mvto game "CreatorX" va00
-aero 10
 tick 1
 
 scrp 2 3 24404 9
-	doif fall = 1
+	doif pose = 0
+*	we have a feather!
+		doif fall = 1
 *	we're falling. Blow with the wind!
 *		don't jitter too much
-		doif rand 0 2 = 0
+			doif rand 0 2 = 0
 *			remember our x velocity
-			setv va10 velx
+				setv va10 velx
 *			pick an amount for the wind to blow (defaults to "blow to the right")
-			setv va11 rand .1 1
+				setv va11 rand .1 1
 *		The wind doesn't change directions constantly.
 *		So probably keep blowing in the same direction
-			doif va10 = 0
+				doif va10 = 0
 *			we're not blowing in any direction yet, so pick one
-				doif rand 0 1 = 0
+					doif rand 0 1 = 0
+						mulv va11 -1
+					endi
+				elif va10 < 0
+*			we're blowing to the left, so keep blowing to the left
 					mulv va11 -1
 				endi
-			elif va10 < 0
-*			we're blowing to the left, so keep blowing to the left
-				mulv va11 -1
-			endi
 *			we'r blowing to the right, so stay with the default, "blow to the right"
 *		But the wind might change
-			doif rand 0 3 = 0
-				mulv va11 -1
-			endi
+				doif rand 0 3 = 0
+					mulv va11 -1
+				endi
 *			set the new velocity
-			addv va10 va11
-			velo va10 vely
+				addv va10 va11
+				velo va10 vely
+			endi
+			stop
+		else
+*		we've landed!
+			wait 100
+			doif carr = null and fall = 0
+*			we're not being carried and we're not falling
+*		lose the feather (maybe do something else? for now we can test the next falling stage)
+				pose 1
+				aero 0
+*	we still need to tick (for growing and stuff) but not nearly as fast
+				tick 20
+			endi
 		endi
 		stop
+	else
+*	we have no feather
+
 	endi
-	doif carr <> null or fall <> 0
-* we're being carried or we're falling
-*	probably not a good time to sprout.
-*	but we are in a rush so hurry it up
-		tick 20
-		stop
-	endi
-	doif rtyp room ownr >= 5 and rtyp room ownr <= 7
+*	doif carr <> null or fall <> 0
+** we're being carried or we're falling
+**	probably not a good time to sprout.
+**	but we are in a rush so hurry it up
+*		tick 20
+*		stop
+*	endi
+*	doif rtyp room ownr >= 5 and rtyp room ownr <= 7
 ** room type is soil
 *		inst
 ** calculate location of new plant agent
@@ -75,9 +93,9 @@ scrp 2 3 24404 9
 *		mvto va00 va01
 *		kill ownr
 *		slow
-	else
-* room type is not soil
-	endi
+*	else
+** room type is not soil
+*	endi
 endm
 
 rscr
@@ -87,5 +105,8 @@ next
 enum 2 4 24404
 	kill targ
 next
+
+scrx 2 3 24404 9
+scrx 2 4 24404 9
 
 endm
