@@ -26,6 +26,9 @@ tick 1
 scrp 2 3 24404 9
 	doif pose = 0
 *	we have a feather!
+********************
+***timer for wind***
+********************
 		doif fall = 1
 *	we're falling. Blow with the wind!
 *		don't jitter too much
@@ -64,38 +67,41 @@ scrp 2 3 24404 9
 				pose 1
 				aero 0
 *	we still need to tick (for growing and stuff) but not nearly as fast
+*				1 seconds (probably more like 2-5(?, hmm) min in the actual agent
 				tick 20
 			endi
 		endi
 		stop
 	else
 *	we have no feather
+********************
+***timer for growing***
+********************
+		doif carr <> null or fall <> 0
+* we're being carried or we're falling
+*	probably not a good time to sprout.
+*	but we are in a rush so hurry it up
+			tick 20
+			stop
+		endi
+		doif rtyp room ownr >= 5 and rtyp room ownr <= 7
+* room type is soil
+			inst
+* calculate location of new plant agent
+			setv va00 posl
+			subv va00 35
+			setv va01 post
+			subv va01 0
+			new: comp 2 4 24404 "puff-plant" 50 0 292
 
+			tick 20
+			mvto va00 va01
+			kill ownr
+			slow
+		else
+* room type is not soil
+		endi
 	endi
-*	doif carr <> null or fall <> 0
-** we're being carried or we're falling
-**	probably not a good time to sprout.
-**	but we are in a rush so hurry it up
-*		tick 20
-*		stop
-*	endi
-*	doif rtyp room ownr >= 5 and rtyp room ownr <= 7
-** room type is soil
-*		inst
-** calculate location of new plant agent
-*		setv va00 posl
-*		subv va00 20
-*		setv va01 post
-*		subv va01 108
-*		new: comp 2 4 24404 "puff-plant" 26 1 292
-*
-*		tick 20
-*		mvto va00 va01
-*		kill ownr
-*		slow
-*	else
-** room type is not soil
-*	endi
 endm
 
 rscr
