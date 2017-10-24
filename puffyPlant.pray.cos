@@ -18,13 +18,13 @@ elas 1
 accg 0.2
 aero 10
 fric 95
-tick 1
+tick 4
 
-setv va00 game "CreatorY"
-*setv va00 mopy
+*setv va00 game "CreatorY"
+setv va00 mopy
 subv va00 hght
-mvto game "CreatorX" va00
-*mvto mopx va00
+*mvto game "CreatorX" va00
+mvto mopx va00
 
 
 scrp 2 3 24404 9
@@ -36,7 +36,7 @@ scrp 2 3 24404 9
 		doif fall = 1
 *	we're falling. Blow with the wind!
 *		don't jitter too much
-			doif rand 0 2 = 0
+			doif rand 0 1 = 0
 *			remember our x velocity
 				setv va10 velx
 *			pick an amount for the wind to blow (defaults to "blow to the right")
@@ -99,7 +99,11 @@ scrp 2 3 24404 9
 			new: comp 2 4 24404 "puff-plant" 50 0 292
 *			current height
 			setv ov10 0
-			tick 20
+*			current part number
+			setv ov11 0
+*			set state "no flower"
+			setv ov12 0
+			tick 40
 			mvto va00 va01
 			kill ownr
 			slow
@@ -110,35 +114,82 @@ scrp 2 3 24404 9
 endm
 
 scrp 2 4 24404 9
-	doif pnxt 0 = -1
+	doif ov12 = 0
+*	state "no flower"
+		doif ov11 = 0
 *	no part 1,
-		subv ov10 31
-		pat: dull 1 "puff-plant" 4 0 ov10 -1
-	elif pnxt 1 = -1
-*	no part 2
-		subv ov10 rand 0 31
-		pat: dull 2 "puff-plant" rand 5 15 0 ov10 -1
-	elif pnxt 2 = -1
-*	no part 3
-		subv ov10 31
-		pat: dull 3 "puff-plant" rand 5 15 0 ov10 -1
-	elif pnxt 3 = -1
-		subv ov10 31
-		pat: dull 4 "puff-plant" rand 5 15 0 ov10 -1
-	elif pnxt 4 = -1
-		subv ov10 31
-		pat: dull 5 "puff-plant" rand 5 15 0 ov10 -1
-	elif pnxt 5 = -1
-		subv ov10 61
-		pat: dull 6 "puff-plant" 36 0 ov10 -2
-		part 6
-		setv va10 0
-		reps 4
-			dbg: outv pose
-			addv va10 1
-			pose va10
-			wait 40
-		repe
+			subv ov10 31
+			addv ov11 1
+			pat: dull ov11 "puff-plant" 4 0 ov10 -1
+		elif ov11 = 1
+*	grow regular segment with random height
+			subv ov10 rand 0 31
+			addv ov11 1
+			pat: dull ov11 "puff-plant" rand 5 15 0 ov10 0
+		elif ov11 <= 4
+*	grow regular segment
+			subv ov10 31
+			addv ov11 1
+			pat: dull ov11 "puff-plant" rand 5 15 0 ov10 0
+		else
+*	glow flower
+			subv ov10 61
+			addv ov11 1
+			pat: dull ov11 "puff-plant" 36 0 ov10 1
+			part 6
+			setv va10 0
+			reps 4
+				dbg: outv pose
+				addv va10 1
+				pose va10
+				wait 40
+			repe
+*	flower grown
+			setv va20 posx
+			setv va21 posy
+			addv va21 ov10
+			subv va20 3
+			addv va21 10
+			setv va24 plne
+			addv va24 100
+*			loop
+			inst
+			reps 100
+				new: simp 2 3 24404 "puff-plant" 2 50 va24
+				attr 211
+
+				perm 64
+				elas 1
+				accg 0.2
+				aero 10
+				fric 95
+				tick 4
+				mvto va20 va21
+				setv va25 rand 0 360
+				setv va26 sin_ va25
+				setv va27 cos_ va25
+				doif rand 0 1 = 0
+					mulv va26 8
+					mulv va27 8
+				else
+					mulv va26 4
+					mulv va27 4
+				endi
+				addv va26 rand -2 2
+				addv va27 rand -4 0
+				velo va26 va27
+			repe
+*				wait 20
+*			ever										
+			wait 3
+			targ ownr
+			part ov11
+			pose 5
+			tick 0
+		endi
+	else
+*	state "has flower"
+
 	endi
 endm
 
