@@ -93,7 +93,6 @@ scrp 2 3 24404 9
 			setv va01 post
 			subv va01 0
 			new: comp 2 4 24404 "puff-plant" 50 0 292
-
 			tick 20
 			mvto va00 va01
 			kill ownr
@@ -101,6 +100,25 @@ scrp 2 3 24404 9
 		else
 * room type is not soil
 		endi
+	endi
+endm
+
+scrp 2 4 24404 9
+	doif pnxt 0 = -1
+*	no part 1, 	
+		pat: dull 1 "puff-plant" rand 4 15 0 -31 -1
+	elif pnxt 1 = -1
+*	no part 2
+		pat: dull 2 "puff-plant" rand 4 15 0 -62 -1
+	elif pnxt 2 = -1
+*	no part 3
+		pat: dull 3 "puff-plant" rand 4 15 0 -93 -1
+	elif pnxt 3 = -1
+		pat: dull 4 "puff-plant" rand 4 15 0 -124 -1
+	elif pnxt 4 = -1
+		pat: dull 5 "puff-plant" rand 4 15 0 -155 -1
+	elif pnxt 5 = -1
+		pat: dull 6 "puff-plant" rand 4 15 0 -186 -1
 	endi
 endm
 
