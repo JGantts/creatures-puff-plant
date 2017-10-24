@@ -113,7 +113,7 @@ scrp 2 3 24404 9
 			setv ov11 0
 *			set state "no flower"
 			setv ov12 0
-			tick 40
+			tick rand 35 45
 			mvto va00 va01
 			kill ownr
 			slow
@@ -162,8 +162,19 @@ scrp 2 4 24404 9
 			addv va21 10
 			setv va24 plne
 			addv va24 100
+			inst
+			rtar 2 3 24404
+			doif targ = null
+				new: simp 2 3 24404 "puff-plant" 2 50 va24
+				seta va50 targ
+			else
+				seta va50 null
+			endi
 			doif tmvt va20 va21 = 0
 				kill ownr
+			endi
+			doif va50 <> null
+				kill va50
 			endi
 *			loop
 			inst
