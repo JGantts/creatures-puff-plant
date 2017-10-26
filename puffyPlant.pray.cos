@@ -2,10 +2,10 @@
 *# Pray-File "puffyPlant.agents"
 *# DS-Name "Puffy Plant"
 *# Agent Animation File = "puff-plant.c16"
-*# Agent Sprite First Image = 3
+*# Agent Sprite First Image = 40
 *# desc = "A plant which is puffy."
 
-*# attach bendyPlant.c16 bendyPlant.catalogue
+*# attach puff-plant.c16
 
 new: simp 2 3 24404 "puff-plant" 2 50 447
 *First seed is inedible and invisible to creatures. Otherwise it'd be hard to start a plant.
@@ -93,6 +93,9 @@ scrp 2 3 24404 9
 		inst
 		esee 2 4 24404
 			addv va40 1
+		next
+		etch 2 4 24404
+			addv va40 15
 		next
 		doif va40 > 10
 			kill ownr
