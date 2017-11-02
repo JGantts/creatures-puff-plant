@@ -51,8 +51,9 @@ scrp 2 3 24404 9
 				elif va10 < 0
 *			we're blowing to the left, so keep blowing to the left
 					mulv va11 -1
+*				else
+*			we're blowing to the right, so stay with the default, "blow to the right"
 				endi
-*			we'r blowing to the right, so stay with the default, "blow to the right"
 *		But the wind might change
 				doif rand 0 3 = 0
 					mulv va11 -1
