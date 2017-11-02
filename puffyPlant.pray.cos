@@ -20,11 +20,11 @@ aero 10
 fric 95
 tick 4
 
-*setv va00 game "CreatorY"
-setv va00 mopy
+setv va00 game "CreatorY"
+*setv va00 mopy
 subv va00 hght
-*mvto game "CreatorX" va00
-mvto mopx va00
+mvto game "CreatorX" va00
+*mvto mopx va00
 
 
 scrp 2 3 24404 9
@@ -97,10 +97,10 @@ scrp 2 3 24404 9
 		etch 2 4 24404
 			addv va40 15
 		next
-		doif va40 > 10
+		slow
+		doif va40 > 4
 			kill ownr
 		endi
-		slow
 		doif rtyp room ownr >= 5 and rtyp room ownr <= 7
 * room type is soil
 			inst
@@ -152,7 +152,7 @@ scrp 2 4 24404 9
 			part 6
 			setv va10 0
 			reps 4
-				dbg: outv pose
+*dbg: outv pose
 				addv va10 1
 				pose va10
 				wait 40
@@ -191,10 +191,15 @@ scrp 2 4 24404 9
 				aero 10
 				fric 95
 				tick 4
+*				rnge rand 400 500
 				mvto va20 va21
+*			Explode in a circle
+*				Random direction
 				setv va25 rand 0 360
+*				Translate to X and Y
 				setv va26 sin_ va25
 				setv va27 cos_ va25
+*				Two "rings" of velocity. So the circle can be full (maybe refactor out the "rand" at some point)
 				doif rand 0 1 = 0
 					mulv va26 8
 					mulv va27 8
@@ -202,6 +207,7 @@ scrp 2 4 24404 9
 					mulv va26 4
 					mulv va27 4
 				endi
+*				Make the "rings" fuzzy. So they turn into a circle
 				addv va26 rand -2 2
 				addv va27 rand -4 0
 				velo va26 va27
