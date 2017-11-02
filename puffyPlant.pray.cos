@@ -111,6 +111,7 @@ scrp 2 3 24404 9
 			setv va01 post
 			subv va01 0
 			new: comp 2 4 24404 "puff-plant" 50 0 292
+			setv name "height" rand 2 4
 *			current height
 			setv ov10 0
 *			current part number
@@ -121,7 +122,7 @@ scrp 2 3 24404 9
 			mvto va00 va01
 			kill ownr
 			slow
-		else
+*		else
 * room type is not soil
 		endi
 	endi
@@ -140,23 +141,23 @@ scrp 2 4 24404 9
 			subv ov10 rand 0 31
 			addv ov11 1
 			pat: dull ov11 "puff-plant" rand 5 15 0 ov10 0
-		elif ov11 <= 4
+		elif ov11 <= name "height"
 *	grow regular segment
 			subv ov10 31
 			addv ov11 1
 			pat: dull ov11 "puff-plant" rand 5 15 0 ov10 0
 		else
-*	glow flower
+*	grow flower
 			subv ov10 61
 			addv ov11 1
 			pat: dull ov11 "puff-plant" 36 0 ov10 1
-			part 6
+			part ov11
 			setv va10 0
 			reps 4
 *dbg: outv pose
+				wait 40
 				addv va10 1
 				pose va10
-				wait 40
 			repe
 *	flower grown
 			setv va20 posx
@@ -166,26 +167,23 @@ scrp 2 4 24404 9
 			addv va21 10
 			setv va24 plne
 			addv va24 100
+			wait 40
 			inst
-			rtar 2 3 24404
-			doif targ = null
-				new: simp 2 3 24404 "puff-plant" 2 50 va24
-				seta va50 targ
-			else
-				seta va50 null
-			endi
+*		check if we can explode here
+			new: simp 2 3 24404 "puff-plant" 2 50 va24
+			perm 100
 			doif tmvt va20 va21 = 0
+				kill targ
 				kill ownr
-			endi
-			doif va50 <> null
-				kill va50
+				stop
+			else
+				kill targ
 			endi
 *			loop
 			inst
-			reps 100
+			reps rand 50 150
 				new: simp 2 3 24404 "puff-plant" 2 50 va24
 				attr 211
-
 				perm 64
 				elas 1
 				accg 0.2
