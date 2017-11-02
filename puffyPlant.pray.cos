@@ -111,7 +111,7 @@ scrp 2 3 24404 9
 			setv va01 post
 			subv va01 0
 			new: comp 2 4 24404 "puff-plant" 50 0 292
-			setv name "height" rand 2 4
+			setv name "height" rand 1 5
 *			current height
 			setv ov10 0
 *			current part number
