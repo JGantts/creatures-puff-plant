@@ -98,13 +98,11 @@ scrp 2 3 24404 9
 		etch 2 4 24404
 			addv va40 15
 		next
-		slow
 		doif va40 > 4
 			kill ownr
 		endi
 		doif rtyp room ownr >= 5 and rtyp room ownr <= 7
 * room type is soil
-			inst
 * calculate location of new plant agent
 			setv va00 posl
 			subv va00 30
