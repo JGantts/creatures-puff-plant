@@ -20,12 +20,21 @@ aero 10
 fric 95
 tick 4
 
-setv va00 game "CreatorY"
-*setv va00 mopy
-subv va00 hght
-mvto game "CreatorX" va00
-*mvto mopx va00
-
+setv va42 1
+doif va42 = 0
+* actual injection location
+*	in comms room
+	setv va00 game "CreatorY"
+	mvto game "CreatorX" va00
+elif va42 = 1
+* testing injection location
+*	near hand. Random x offset, so help scatter seeds
+	setv va00 mopy
+	subv va00 hght
+	setv va01 mopx
+	addv va01 rand -200 200
+	mvsf va01 va00
+endi
 
 scrp 2 3 24404 9
 	doif pose = 0
@@ -95,6 +104,32 @@ scrp 2 3 24404 9
 		endi
 *	check room type is soil
 		doif rtyp room ownr < 5 or rtyp room ownr > 7
+*dbg: outs "<<puff plant seed>> not soil"
+			gsub rot
+		endi
+*	check room properties
+*		Get Local Room ID
+		targ ownr
+		setv va00 grap posx posy
+*		really dark?
+		doif prop va00 1 < .05
+*dbg: outs "<<puff plant seed>> too dark"
+			gsub rot
+		endi
+*		too chilly?
+		doif prop va00 2 < .4
+*dbg: outs "<<puff plant seed>> too cold"
+			gsub rot
+		endi
+*		really really bone dry or a bit too wet?
+		doif prop va00 3 < .00001 or prop va00 3 > .8
+*dbg: outs "<<puff plant seed>> really dry or too wet"
+
+			gsub rot
+		endi
+*		too few nutrients?
+		doif prop va00 4 < .1
+*dbg: outs "<<puff plant seed>> too few nutrients"
 			gsub rot
 		endi
 		inst
@@ -135,7 +170,7 @@ scrp 2 3 24404 9
 		mvto va00 va01
 		kill ownr
 		slow
-		
+
 		subr rot
 			kill ownr
 		retn
@@ -168,7 +203,7 @@ scrp 2 4 24404 9
 			part ov11
 			setv va10 0
 			reps 4
-*dbg: outv pose
+**dbg: outv pose
 				wait 40
 				addv va10 1
 				pose va10
