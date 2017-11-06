@@ -7,7 +7,7 @@
 
 *# attach puff-plant.c16
 
-new: simp 2 3 24404 "puff-plant" 2 50 447
+new: simp 2 3 24404 "puff-plant" 6 57 447
 *First seed is inedible and invisible to creatures. Otherwise it'd be hard to start a plant.
 setv va00 195
 addv va00 16
@@ -67,9 +67,12 @@ scrp 2 3 24404 9
 *		we've landed!
 			wait 100
 			doif carr = null and fall = 0
+				lock
 *			we're not being carried and we're not falling
-*		lose the feather (maybe do something else? for now we can test the next falling stage)
-				pose 1
+*		lose the feather
+				frat rand 10 14
+				anim [1 2 3 4 5]
+				over
 				aero 0
 *	we still need to tick (for growing and stuff) but not nearly as fast
 *				1 seconds (probably more like 2-5(?, hmm) min in the actual agent
@@ -90,39 +93,52 @@ scrp 2 3 24404 9
 			tick 20
 			stop
 		endi
-		setv va40 0
+*	check room type is soil
+		doif rtyp room ownr < 5 or rtyp room ownr > 7
+			gsub rot
+		endi
 		inst
+		setv va40 0
+*	check population for 1 within 100 pixels
+		rnge 100
 		esee 2 4 24404
 			addv va40 1
 		next
-		etch 2 4 24404
-			addv va40 15
+		doif va40 > 1
+			gsub rot
+		endi
+*	check population for 5 within 1000 pixels
+		rnge 1000
+		esee 2 4 24404
+			addv va40 1
 		next
-		doif va40 > 4
-			kill ownr
+		doif va40 > 5
+			gsub rot
 		endi
-		doif rtyp room ownr >= 5 and rtyp room ownr <= 7
-* room type is soil
-* calculate location of new plant agent
-			setv va00 posl
-			subv va00 30
-			setv va01 post
-			subv va01 0
-			new: comp 2 4 24404 "puff-plant" 50 0 292
-			setv name "height" rand 1 5
-*			current height
-			setv ov10 0
-*			current part number
-			setv ov11 0
-*			set state "no flower"
-			setv ov12 0
-			tick rand 35 45
-			mvto va00 va01
+		etch 2 4 24404
+			gsub rot
+		next
+*	calculate location of new plant agent
+		setv va00 posl
+		subv va00 30
+		setv va01 post
+		subv va01 0
+		new: comp 2 4 24404 "puff-plant" 50 0 292
+		setv name "height" rand 1 5
+*		current height
+		setv ov10 0
+*		current part number
+		setv ov11 0
+*		set state "no flower"
+		setv ov12 0
+		tick rand 35 45
+		mvto va00 va01
+		kill ownr
+		slow
+		
+		subr rot
 			kill ownr
-			slow
-*		else
-* room type is not soil
-		endi
+		retn
 	endi
 endm
 
@@ -133,22 +149,22 @@ scrp 2 4 24404 9
 *	no part 1,
 			subv ov10 31
 			addv ov11 1
-			pat: dull ov11 "puff-plant" 4 0 ov10 -1
+			pat: dull ov11 "puff-plant" 8 0 ov10 -1
 		elif ov11 = 1
 *	grow regular segment with random height
 			subv ov10 rand 0 31
 			addv ov11 1
-			pat: dull ov11 "puff-plant" rand 5 15 0 ov10 0
+			pat: dull ov11 "puff-plant" rand 9 19 0 ov10 0
 		elif ov11 <= name "height"
 *	grow regular segment
 			subv ov10 31
 			addv ov11 1
-			pat: dull ov11 "puff-plant" rand 5 15 0 ov10 0
+			pat: dull ov11 "puff-plant" rand 9 19 0 ov10 0
 		else
 *	grow flower
 			subv ov10 61
 			addv ov11 1
-			pat: dull ov11 "puff-plant" 36 0 ov10 1
+			pat: dull ov11 "puff-plant" 40 0 ov10 1
 			part ov11
 			setv va10 0
 			reps 4
@@ -168,7 +184,7 @@ scrp 2 4 24404 9
 			wait 40
 			inst
 *		check if we can explode here
-			new: simp 2 3 24404 "puff-plant" 2 50 va24
+			new: simp 2 3 24404 "puff-plant" 6 57 va24
 			perm 100
 			doif tmvt va20 va21 = 0
 				kill targ
@@ -180,7 +196,7 @@ scrp 2 4 24404 9
 *			loop
 			inst
 			reps rand 50 150
-				new: simp 2 3 24404 "puff-plant" 2 50 va24
+				new: simp 2 3 24404 "puff-plant" 6 57 va24
 				attr 211
 				perm 64
 				elas 1
@@ -188,7 +204,6 @@ scrp 2 4 24404 9
 				aero 10
 				fric 95
 				tick 4
-*				rnge rand 400 500
 				mvto va20 va21
 *			Explode in a circle
 *				Random direction
