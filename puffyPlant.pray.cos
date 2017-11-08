@@ -122,7 +122,7 @@ scrp 2 3 24404 9
 			gsub rot
 		endi
 *		really really bone dry or a bit too wet?
-		doif prop va00 3 < .00001 or prop va00 3 > .8
+		doif prop va00 3 < .00001 or prop va00 3 > .3
 *dbg: outs "<<puff plant seed>> really dry or too wet"
 
 			gsub rot
@@ -203,7 +203,6 @@ scrp 2 4 24404 9
 			part ov11
 			setv va10 0
 			reps 4
-**dbg: outv pose
 				wait 40
 				addv va10 1
 				pose va10
