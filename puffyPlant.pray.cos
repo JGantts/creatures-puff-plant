@@ -162,7 +162,7 @@ scrp 2 3 24404 9
 		setv va01 post
 		subv va01 0
 		new: comp 2 4 24404 "puff-plant" 50 0 292
-		setv name "height" rand 1 5
+		setv name "height" rand 0 1
 *		current height
 		setv name "CurrentHeight" 0
 *		current part number
@@ -208,7 +208,7 @@ scrp 2 4 24404 9
 			frat 11
 			anim [1 2 3 4]
 			over
-			tick 100
+			tick 1000
 			inst
 			setv name "Flower" 1
 *		make the flower toy agent
@@ -223,9 +223,15 @@ scrp 2 4 24404 9
 			addv va01 10
 			addv va02 3
 			new: simp 2 21 24404 "puff-plant" 8 49 295
+			setv name "Free" 0
+			attr 4
+			bhvr 43
 			mvto va01 va02
 			seta name "Stalk" ownr
 			seta mame "Ball" targ
+			targ ownr
+			part mame "CurrentPart"
+			pose 5
 		endi
 	elif mame "Flower" = 1
 *	state "has flower"
@@ -240,6 +246,11 @@ scrp 2 4 24404 9
 *	state "grew flower and it's gone"
 		kill ownr
 	endi
+endm
+
+*Stalk - LostBall
+scrp 2 4 24404 1000
+
 endm
 
 *Ball - Explode
@@ -293,14 +304,62 @@ scrp 2 21 24404 1000
 *	let seed-ball expand to juuust the right amount
 	wait 3
 	inst
-	seta va00 from
-	seta va00 mame "Stalk"
-	doif from = mame "Stalk"
-		targ mame "Stalk"
-		part name "CurrentPart"
-		pose 5
+	doif name "Free" = 0
+		mesg writ mame "Stalk" 1000
 	endi
 	kill ownr
+endm
+
+*Ball - Activate 1
+scrp 2 21 24404 1
+dbg: outs "<<puff plant ball>> activate 1"
+	inst
+	doif name "Free" = 0
+		setv name "Free" 1
+*		Add physics and allow hand to carry
+		attr 198
+		mesg writ mame "Stalk" 1000
+	endi
+	doif from = pntr
+		mesg writ ownr 1000
+	endi
+endm
+
+*Ball - Activate 2
+scrp 2 21 24404 2
+dbg: outs "<<puff plant ball>> activate 2"
+	lock
+	doif name "Free" = 0
+		setv name "Free" 1
+*		Add physics and allow hand to carry
+		attr 198
+		mesg writ mame "Stalk" 1000
+	endi
+endm
+
+*Ball - Hit
+scrp 2 21 24404 3
+dbg: outs "<<puff plant ball>> hit"
+	lock
+	doif name "Free" = 0
+		setv name "Free" 1
+*		Add physics and allow hand to carry
+		attr 198
+		mesg writ mame "Stalk" 1000
+	endi
+endm
+
+*Ball - Picked up
+scrp 2 21 24404 5
+dbg: outs "<<puff plant ball>> picked up"
+	inst
+	lock
+	doif name "Free" = 0
+		setv name "Free" 1
+*		Add physics and allow hand to carry
+		attr 198
+		mesg writ mame "Stalk" 1000
+	endi
 endm
 
 rscr
