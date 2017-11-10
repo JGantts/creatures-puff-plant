@@ -165,7 +165,7 @@ scrp 2 3 24404 9
 *		current part number
 		setv name "CurrentPart" 0
 *		set state "no flower"
-		setv name "hasFlower" 0
+		setv name "Flower" 0
 		tick rand 35 45
 		mvto va00 va01
 		kill ownr
@@ -178,7 +178,7 @@ scrp 2 3 24404 9
 endm
 
 scrp 2 4 24404 9
-	doif name "hasFlower" = 0
+	doif mame "Flower" = 0
 *	state "no flower"
 		doif name "CurrentPart" = 0
 *	no part 1,
@@ -196,72 +196,102 @@ scrp 2 4 24404 9
 			addv name "CurrentPart" 1
 			pat: dull name "CurrentPart" "puff-plant" rand 9 19 0 name "CurrentHeight" 0
 		else
-*	grow flower
+*	grow flower base
 			subv name "CurrentHeight" 61
 			addv name "CurrentPart" 1
 			pat: dull name "CurrentPart" "puff-plant" 40 0 name "CurrentHeight" 1
 			part name "CurrentPart"
-			setv va10 0
-			reps 4
-				wait 40
-				addv va10 1
-				pose va10
-			repe
-			setv name "hasFlower" 1
+			frat 11
+			anim [1 2 3 4]
+			over
+			tick 100
+			inst
+			setv name "Flower" 1
+*		make the flower toy agent
+*			remember plane
+			setv va00 plne
+			addv va00 3
+*			remember position
+			setv va01 posl
+			setv va02 post
+*			nudge it into place
+			addv va02 name "CurrentHeight"
+			addv va01 10
+			addv va02 3
+			new: simp 2 21 24404 "puff-plant" 8 49 295
+			mvto va01 va02
+			seta name "Stalk" ownr
+			seta mame "Ball" targ
 		endi
-	else
+	elif mame "Flower" = 1
 *	state "has flower"
-		setv va20 posx
-		setv va21 posy
-		addv va21 name "CurrentHeight"
-		subv va20 3
-		addv va21 10
-		setv va24 plne
-		addv va24 100
 		inst
-*		check if we can explode here
-		new: simp 2 3 24404 "puff-plant" 6 57 va24
-		perm 100
-		doif tmvt va20 va21 = 0
-			kill targ
-			kill ownr
-			stop
-		else
-			kill targ
+		doif mame "Ball" <> null
+			mesg writ mame "Ball" 1000
 		endi
-		inst
-		reps rand 50 150
-			new: simp 2 3 24404 "puff-plant" 6 57 va24
-			attr 211
-			perm 64
-			elas 1
-			accg 0.2
-			aero 10
-			fric 95
-			tick 4
-			mvto va20 va21
-*		Explode in a circle
-*			Random direction
-			setv va25 rand 0 360
-*			Translate to X and Y
-			setv va26 cos_ va25
-			setv va27 sin_ va25
-*			Random speed
-*			(would otherwise make a ring of seeds, instead of a ball)
-			setv va29 rand 2 9
-			mulv va26 va29
-			mulv va27 va29
-*			Set velocity
-			velo va26 va27
-		repe
-*		let seed-ball expand to juuust the right amount
-		wait 3
-		targ ownr
-		part name "CurrentPart"
-		pose 5
-		wait rand 0 1000
+		setv mame "Flower" 2
+		slow
+		tick rand 20 1000
+	elif mame "Flower" = 2
+*	state "grew flower and it's gone"
 		kill ownr
 	endi
+endm
+
+*Ball - Explode
+scrp 2 21 24404 1000
+	setv va20 posx
+	setv va21 posy
+	subv va21 6
+	setv va24 plne
+	addv va24 100
+	inst
+*	check if we can explode here
+	new: simp 2 3 24404 "puff-plant" 6 57 va24
+	perm 100
+	doif tmvt va20 va21 = 0
+		kill targ
+		kill ownr
+		stop
+	else
+		kill targ
+	endi
+	inst
+	reps rand 50 150
+		new: simp 2 3 24404 "puff-plant" 6 57 va24
+		attr 211
+		perm 64
+		elas 1
+		accg 0.2
+		aero 10
+		fric 95
+		tick 4
+		mvto va20 va21
+*	Explode in a circle
+*		Random direction
+		setv va25 rand 0 360
+*		Translate to X and Y
+		setv va26 cos_ va25
+		setv va27 sin_ va25
+*		Random speed
+*		(would otherwise make a ring of seeds, instead of a ball)
+		setv va29 rand 2 9
+		mulv va26 va29
+		mulv va27 va29
+*		Set velocity
+		velo va26 va27
+	repe
+*	let seed-ball expand to juuust the right amount
+	wait 3
+	inst
+	seta va00 from
+	seta va00 mame "Stalk"
+	doif from = mame "Stalk"
+		targ mame "Stalk"
+		part name "CurrentPart"
+		pose 5
+	endi
+	kill ownr
 endm
 
 rscr
@@ -271,8 +301,11 @@ next
 enum 2 4 24404
 	kill targ
 next
+enum 2 21 24404
+	kill targ
+next
 
-scrx 2 3 24404 9
-scrx 2 4 24404 9
-
+scrx 2 3 24404 0
+scrx 2 4 24404 0
+scrx 2 21 24404 0
 endm
