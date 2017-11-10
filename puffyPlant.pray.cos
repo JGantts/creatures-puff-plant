@@ -243,8 +243,8 @@ scrp 2 4 24404 9
 *				Random direction
 				setv va25 rand 0 360
 *				Translate to X and Y
-				setv va26 sin_ va25
-				setv va27 cos_ va25
+				setv va26 cos_ va25
+				setv va27 sin_ va25
 *				Two "rings" of velocity. So the circle can be full (maybe refactor out the "rand" at some point)
 				doif rand 0 1 = 0
 					mulv va26 8
@@ -258,8 +258,7 @@ scrp 2 4 24404 9
 				addv va27 rand -4 0
 				velo va26 va27
 			repe
-*				wait 20
-*			ever										
+*			let seed-ball expand to juuust the right amount
 			wait 3
 			targ ownr
 			part ov11
