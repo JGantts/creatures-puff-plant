@@ -245,17 +245,12 @@ scrp 2 4 24404 9
 *				Translate to X and Y
 				setv va26 cos_ va25
 				setv va27 sin_ va25
-*				Two "rings" of velocity. So the circle can be full (maybe refactor out the "rand" at some point)
-				doif rand 0 1 = 0
-					mulv va26 8
-					mulv va27 8
-				else
-					mulv va26 4
-					mulv va27 4
-				endi
-*				Make the "rings" fuzzy. So they turn into a circle
-				addv va26 rand -2 2
-				addv va27 rand -4 0
+*				Random speed
+*				(would otherwise make a ring of seeds, instead of a ball)
+				setv va29 rand 1 9
+				mulv va26 va29
+				mulv va27 va29
+*				Set velocity
 				velo va26 va27
 			repe
 *			let seed-ball expand to juuust the right amount
