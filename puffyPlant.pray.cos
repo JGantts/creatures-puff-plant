@@ -124,7 +124,6 @@ scrp 2 3 24404 9
 *		really really bone dry or a bit too wet?
 		doif prop va00 3 < .00001 or prop va00 3 > .3
 *dbg: outs "<<puff plant seed>> really dry or too wet"
-
 			gsub rot
 		endi
 *		too few nutrients?
@@ -134,12 +133,18 @@ scrp 2 3 24404 9
 		endi
 		inst
 		setv va40 0
+*	check population touching
+		etch 2 4 24404
+			gsub rot
+*dbg: outs "<<puff plant seed>> stop touching me!"
+		next
 *	check population for 1 within 100 pixels
 		rnge 100
 		esee 2 4 24404
 			addv va40 1
 		next
 		doif va40 > 1
+*dbg: outs "<<puff plant seed>> too crowded, 100"
 			gsub rot
 		endi
 *	check population for 5 within 1000 pixels
@@ -148,11 +153,9 @@ scrp 2 3 24404 9
 			addv va40 1
 		next
 		doif va40 > 5
+*dbg: outs "<<puff plant seed>> too crowded, 1000"
 			gsub rot
 		endi
-		etch 2 4 24404
-			gsub rot
-		next
 *	calculate location of new plant agent
 		setv va00 posl
 		subv va00 30
@@ -172,6 +175,7 @@ scrp 2 3 24404 9
 		slow
 
 		subr rot
+*dbg: outs "<<puff plant seed>> rotting"
 			kill ownr
 		retn
 	endi
@@ -256,8 +260,13 @@ scrp 2 21 24404 1000
 	else
 		kill targ
 	endi
+*	random size of exploding ball 
+*		(used for both number of seeds and max velocity of seeds)
+	setv va28 rand 9 15
+	setv va30 va28
+	mulv va30 10
 	inst
-	reps rand 50 150
+	reps va30
 		new: simp 2 3 24404 "puff-plant" 6 57 va24
 		attr 211
 		perm 64
@@ -275,7 +284,7 @@ scrp 2 21 24404 1000
 		setv va27 sin_ va25
 *		Random speed
 *		(would otherwise make a ring of seeds, instead of a ball)
-		setv va29 rand 2 9
+		setv va29 rand 2 va28
 		mulv va26 va29
 		mulv va27 va29
 *		Set velocity
