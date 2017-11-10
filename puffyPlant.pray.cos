@@ -161,11 +161,11 @@ scrp 2 3 24404 9
 		new: comp 2 4 24404 "puff-plant" 50 0 292
 		setv name "height" rand 1 5
 *		current height
-		setv ov10 0
+		setv name "CurrentHeight" 0
 *		current part number
-		setv ov11 0
+		setv name "CurrentPart" 0
 *		set state "no flower"
-		setv ov12 0
+		setv name "hasFlower" 0
 		tick rand 35 45
 		mvto va00 va01
 		kill ownr
@@ -178,92 +178,89 @@ scrp 2 3 24404 9
 endm
 
 scrp 2 4 24404 9
-	doif ov12 = 0
+	doif name "hasFlower" = 0
 *	state "no flower"
-		doif ov11 = 0
+		doif name "CurrentPart" = 0
 *	no part 1,
-			subv ov10 31
-			addv ov11 1
-			pat: dull ov11 "puff-plant" 8 0 ov10 -1
-		elif ov11 = 1
+			subv name "CurrentHeight" 31
+			addv name "CurrentPart" 1
+			pat: dull name "CurrentPart" "puff-plant" 8 0 name "CurrentHeight" -1
+		elif name "CurrentPart" = 1
 *	grow regular segment with random height
-			subv ov10 rand 0 31
-			addv ov11 1
-			pat: dull ov11 "puff-plant" rand 9 19 0 ov10 0
-		elif ov11 <= name "height"
+			subv name "CurrentHeight" rand 0 31
+			addv name "CurrentPart" 1
+			pat: dull name "CurrentPart" "puff-plant" rand 9 19 0 name "CurrentHeight" 0
+		elif name "CurrentPart" <= name "height"
 *	grow regular segment
-			subv ov10 31
-			addv ov11 1
-			pat: dull ov11 "puff-plant" rand 9 19 0 ov10 0
+			subv name "CurrentHeight" 31
+			addv name "CurrentPart" 1
+			pat: dull name "CurrentPart" "puff-plant" rand 9 19 0 name "CurrentHeight" 0
 		else
 *	grow flower
-			subv ov10 61
-			addv ov11 1
-			pat: dull ov11 "puff-plant" 40 0 ov10 1
-			part ov11
+			subv name "CurrentHeight" 61
+			addv name "CurrentPart" 1
+			pat: dull name "CurrentPart" "puff-plant" 40 0 name "CurrentHeight" 1
+			part name "CurrentPart"
 			setv va10 0
 			reps 4
 				wait 40
 				addv va10 1
 				pose va10
 			repe
-*	flower grown
-			setv va20 posx
-			setv va21 posy
-			addv va21 ov10
-			subv va20 3
-			addv va21 10
-			setv va24 plne
-			addv va24 100
-			wait 40
-			inst
-*		check if we can explode here
-			new: simp 2 3 24404 "puff-plant" 6 57 va24
-			perm 100
-			doif tmvt va20 va21 = 0
-				kill targ
-				kill ownr
-				stop
-			else
-				kill targ
-			endi
-*			loop
-			inst
-			reps rand 50 150
-				new: simp 2 3 24404 "puff-plant" 6 57 va24
-				attr 211
-				perm 64
-				elas 1
-				accg 0.2
-				aero 10
-				fric 95
-				tick 4
-				mvto va20 va21
-*			Explode in a circle
-*				Random direction
-				setv va25 rand 0 360
-*				Translate to X and Y
-				setv va26 cos_ va25
-				setv va27 sin_ va25
-*				Random speed
-*				(would otherwise make a ring of seeds, instead of a ball)
-				setv va29 rand 1 9
-				mulv va26 va29
-				mulv va27 va29
-*				Set velocity
-				velo va26 va27
-			repe
-*			let seed-ball expand to juuust the right amount
-			wait 3
-			targ ownr
-			part ov11
-			pose 5
-			wait rand 0 1000
-			kill ownr
+			setv name "hasFlower" 1
 		endi
 	else
 *	state "has flower"
-
+		setv va20 posx
+		setv va21 posy
+		addv va21 name "CurrentHeight"
+		subv va20 3
+		addv va21 10
+		setv va24 plne
+		addv va24 100
+		inst
+*		check if we can explode here
+		new: simp 2 3 24404 "puff-plant" 6 57 va24
+		perm 100
+		doif tmvt va20 va21 = 0
+			kill targ
+			kill ownr
+			stop
+		else
+			kill targ
+		endi
+		inst
+		reps rand 50 150
+			new: simp 2 3 24404 "puff-plant" 6 57 va24
+			attr 211
+			perm 64
+			elas 1
+			accg 0.2
+			aero 10
+			fric 95
+			tick 4
+			mvto va20 va21
+*		Explode in a circle
+*			Random direction
+			setv va25 rand 0 360
+*			Translate to X and Y
+			setv va26 cos_ va25
+			setv va27 sin_ va25
+*			Random speed
+*			(would otherwise make a ring of seeds, instead of a ball)
+			setv va29 rand 2 9
+			mulv va26 va29
+			mulv va27 va29
+*			Set velocity
+			velo va26 va27
+		repe
+*		let seed-ball expand to juuust the right amount
+		wait 3
+		targ ownr
+		part name "CurrentPart"
+		pose 5
+		wait rand 0 1000
+		kill ownr
 	endi
 endm
 
