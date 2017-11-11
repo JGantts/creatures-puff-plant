@@ -214,12 +214,15 @@ endm
 scrp 2 4 24404 9
 	doif mame "Flower" = 0
 *	state "no flower"
-*		grow firstpart
+*		grow "growth stalk"
 		subv mame "CurrentHeight" 31
-		pat: dull 1 "puff-plant" 4 0 name "CurrentHeight" -1
+		inst
+		pat: dull 1 "puff-plant" 0 0 name "CurrentHeight" -1
 		part 1
+		pose 4
+		slow
 		frat 10
-		anim [1 2 3 4]
+		anim [5 6 7 8]
 		over
 *		sprout flower
 		setv mame "FlowerHeight" mame "CurrentHeight"
@@ -238,10 +241,10 @@ scrp 2 4 24404 9
 		frat 11
 		anim [1 2 3 4]
 		over
-		pose 5
-
 		tick 10
 		inst
+*		go back to "tiny ball" pose and make ball agent
+		pose 0
 		setv name "Flower" 1
 *	make the flower toy agent
 *		remember plane
@@ -278,7 +281,9 @@ scrp 2 4 24404 9
 			gsub checkBall
 			targ ownr
 			addv name "CurrentPart" 1
-			pat: dull name "CurrentPart" "puff-plant" rand 9 19 0 name "CurrentHeight" 0
+			pat: dull name "CurrentPart" "puff-plant" 0 0 name "CurrentHeight" 0
+			part name "CurrentPart"
+			pose rand 9 19
 			subv name "CurrentHeight" 31
 			part mame "FlowerPart"
 *		slide/grow flower-base and ball upwards
@@ -291,6 +296,7 @@ scrp 2 4 24404 9
 				wait mame "StalkGrowthSpeed"
 			repe
 		else
+*	we're done growing (or were told to stop because of missing ball)
 			inst
 			doif mame "Ball" <> null
 				targ mame "Ball"
@@ -305,7 +311,74 @@ scrp 2 4 24404 9
 		endi
 	elif mame "Flower" = 2
 *	state "grew flower and it's gone"
-		kill ownr
+*		start wilting/continue wilting/die
+		inst
+		targ ownr
+		part mame "FlowerPart"
+*dbg: outs "pose: "
+*dbg: outv pose
+		doif pose = 0
+*	haven't started wilting yet
+*	start wilitng
+			dbg: outs "start wilting"
+*		switch pose of flower
+			pose 5
+*		(base's first pose is basically same as 1st wilting pose of everything else)
+**		switch pose of base
+*			part 0
+*			pose 1
+*		switch pose of "growth stalk"
+			part 1
+			pose 20
+*		switch pose of stalks
+*			every part after "FlowerPart" is a stalk with leaves			
+			setv va40 pnxt mame "FlowerPart"
+			loop
+				doif va40 <> -1
+					part va40
+*			(drop all leaves at some point, rigth now just switch pose)
+					pose 20
+					setv va40 pnxt va40
+				endi
+			untl va40 = -1
+			tick 40
+			dbg: outs "done starting wilitng"
+		elif pose < 8
+*	continue wilting
+			dbg: outs "continue wilting"
+*		wilt flower
+			setv va39 pose
+			addv va39 1
+			pose va39
+			dbg: outs "setting flower pose to: "
+			dbg: outv va39
+*		wilt base
+			part 0
+			setv va39 pose
+			addv va39 1
+			pose va39
+*		wilt "growth stalk"
+			part 1
+			setv va39 pose
+			addv va39 1
+			pose va39
+*		va40 is currentPart (for loop)
+*		va41 is currentPose
+*		va42 is nextPose
+			setv va40 pnxt mame "FlowerPart"
+			loop
+				doif va40 <> -1
+					part va40
+					setv va41 pose
+					addv va41 1
+					pose va41
+					setv va40 pnxt va40
+				endi
+			untl va40 = -1
+		else
+			DBG: outv pose
+			kill ownr
+		endi
 	endi
 
 	subr checkBall
