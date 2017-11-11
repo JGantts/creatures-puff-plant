@@ -257,14 +257,14 @@ scrp 2 4 24404 9
 		setv name "Free" 0
 *		activateable AND suffer collisions BUT NOT suffer physics. wow.
 		attr 68
-*debugging - let hand grad ball
-		attr 70
+*debugging - let hand grab ball
+*attr 70
 		bhvr 43
 *		doif tmvt va01 va02 = 0
-**		we've grown in a bad position, crap
-*			kill targ
-*			kill ownr
-*		endi
+*		we've grown in a bad position, crap
+			kill targ
+			kill ownr
+		endi
 		mvto va01 va02
 		seta name "Stalk" ownr
 		seta mame "Ball" targ
