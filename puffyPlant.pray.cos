@@ -7,7 +7,7 @@
 
 *# attach puff-plant.c16
 
-new: simp 2 3 24404 "puff-plant" 6 57 447
+new: simp 2 3 24404 "puff-plant" 7 57 447
 
 *setv name "StalkGrowthSpeed" rand 1 30
 sets name "State" "Drifting"
@@ -241,7 +241,7 @@ scrp 2 3 24404 9
 		endi
 		doif va60 = 0
 *dbg: outs "I should hibernate"
-			pose 2
+			pose 6
 			sets mame "State" "Hibernating"
 			stop
 		else
@@ -454,7 +454,7 @@ scrp 2 21 24404 1000
 	addv va24 100
 	inst
 *	check if we can explode here
-	new: simp 2 3 24404 "puff-plant" 6 57 va24
+	new: simp 2 3 24404 "puff-plant" 7 57 va24
 	perm 100
 	doif tmvt va20 va21 = 0
 		kill targ
@@ -473,7 +473,7 @@ scrp 2 21 24404 1000
 	setv va35 velx
 	setv va36 vely
 	reps va30
-		new: simp 2 3 24404 "puff-plant" 6 57 va24
+		new: simp 2 3 24404 "puff-plant" 7 57 va24
 		sets name "State" "Drifting"
 		attr 211
 		bhvr 48
