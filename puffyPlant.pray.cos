@@ -260,7 +260,7 @@ scrp 2 4 24404 9
 *debugging - let hand grab ball
 *attr 70
 		bhvr 43
-*		doif tmvt va01 va02 = 0
+		doif tmvt va01 va02 = 0
 *		we've grown in a bad position, crap
 			kill targ
 			kill ownr
