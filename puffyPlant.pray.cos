@@ -172,10 +172,16 @@ scrp 2 3 24404 9
 			gsub rot
 		endi
 *	check map boundries
-		doif obst LEFT < 35 or obst RGHT < 35 or obst _UP_ < 130
-*dbg: outs "<<puff plant seed>> not enough map room"
+		doif obst _UP_ < 130
+*dbg: outs "<<puff plant seed>> not enough room upwards"
 			gsub rot
 		endi
+		mvby 0 -100
+		doif obst LEFT < 35 or obst RGHT < 35
+*dbg: outs "<<puff plant seed>> not enough room left or right"
+			gsub rot
+		endi
+		mvby 0 100
 *	calculate location of new plant agent
 		setv va00 posl
 		subv va00 30
