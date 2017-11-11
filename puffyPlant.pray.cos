@@ -239,7 +239,7 @@ scrp 2 4 24404 9
 		repe
 *		grow flower
 		frat 11
-		anim [1 2 3 4]
+		anim [1 2 3]
 		over
 		tick 10
 		inst
@@ -258,6 +258,7 @@ scrp 2 4 24404 9
 		addv va01 10
 		addv va02 3
 		new: simp 2 21 24404 "puff-plant" 8 49 295
+		pose rand 0 7
 		setv name "Free" 0
 *		activateable AND suffer collisions BUT NOT suffer physics. wow.
 		attr 68
