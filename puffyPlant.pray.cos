@@ -232,7 +232,7 @@ scrp 2 3 24404 9
 *		look for nearby seeds. Don't want hundreds of hibernating seeds.
 *			scattered about every two and a half pixels
 			inst
-			rnge 150
+			rnge 100
 			esee 2 3 24404
 				doif targ <> ownr
 					setv va60 1
