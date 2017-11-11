@@ -274,6 +274,8 @@ scrp 2 4 24404 9
 
 		doif name "CurrentPart" <= name "GoalHeight"
 *	grow regular segment
+			gsub checkBall
+			targ ownr
 			addv name "CurrentPart" 1
 			pat: dull name "CurrentPart" "puff-plant" rand 9 19 0 name "CurrentHeight" 0
 			subv name "CurrentHeight" 31
@@ -283,31 +285,18 @@ scrp 2 4 24404 9
 				targ ownr
 				subv mame "FlowerHeight" 1
 				pat: move mame "FlowerPart" 0 mame "FlowerHeight"
-*				ball destroyed
-*				OR ball's gone, but not destroyed
-*				OR we've hit the ceiling
-*					stop growing altogether
-				targ mame "Ball"
-				inst
-				doif targ = null
-					setv mame "GoalHeight" 0
-					stop
-				endi
-				doif name "Free" <> 0
-					setv mame "GoalHeight" 0
-					stop
-				endi
-				doif tmvb 0 -1 = 0
-					setv mame "GoalHeight" 0
-					stop
-				endi
+				gsub checkBall
 				mvby 0 -1
 				wait mame "StalkGrowthSpeed"
 			repe
 		else
 			inst
 			doif mame "Ball" <> null
-				mesg writ mame "Ball" 1000
+				targ mame "Ball"
+				doif name "Free" = 0
+*				Ball exists and is still attached to stalk
+					mesg writ mame "Ball" 1000
+				endi
 			endi
 			setv mame "Flower" 2
 			slow
@@ -317,6 +306,27 @@ scrp 2 4 24404 9
 *	state "grew flower and it's gone"
 		kill ownr
 	endi
+
+	subr checkBall
+*		ball destroyed
+*		OR ball's gone, but not destroyed
+*		OR we've hit the ceiling
+*			stop growing altogether
+		targ mame "Ball"
+		inst
+		doif targ = null
+			setv mame "GoalHeight" 0
+			stop
+		endi
+		doif name "Free" <> 0
+			setv mame "GoalHeight" 0
+			stop
+		endi
+		doif tmvb 0 -1 = 0
+			setv mame "GoalHeight" 0
+			stop
+		endi
+	retn
 endm
 
 *Stalk - LostBall
@@ -384,7 +394,10 @@ scrp 2 21 24404 1000
 	wait 3
 	inst
 	doif name "Free" = 0
-		mesg writ mame "Stalk" 1000
+		targ mame "Stalk"
+		doif targ <> null
+			mesg writ targ 1000
+		endi
 	endi
 	kill ownr
 endm
