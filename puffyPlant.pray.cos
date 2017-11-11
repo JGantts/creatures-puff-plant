@@ -8,10 +8,12 @@
 *# attach puff-plant.c16
 
 new: simp 2 3 24404 "puff-plant" 6 57 447
+
+*setv name "StalkGrowthSpeed" rand 1 30
+sets name "State" "Drifting"
+
 *First seed is inedible and invisible to creatures. Otherwise it'd be hard to start a plant.
-setv va00 195
-addv va00 16
-attr va00
+attr 211
 *bhvr 48
 perm 64
 elas 1
@@ -19,8 +21,6 @@ accg 0.2
 aero 10
 fric 95
 tick 4
-
-*setv name "StalkGrowthSpeed" rand 1 30
 
 setv va42 1
 doif va42 = 0
@@ -52,8 +52,8 @@ scrp 2 3 24404 12
 endm
 
 scrp 2 3 24404 9
-	doif pose = 0
-*	we have a feather!
+	lock
+	doif mame "State" = "Drifting"
 ********************
 ***timer for wind***
 ********************
@@ -103,10 +103,11 @@ scrp 2 3 24404 9
 				tick 20
 			endi
 		endi
+		sets mame "State" "Checking"
 		stop
-	else
+	elif mame "State" = "Checking" or mame "State" = "CheckOnceMore"
 		wait rand 0 100
-*	we have no feather
+		inst
 ********************
 ***timer for growing***
 ********************
@@ -146,7 +147,6 @@ scrp 2 3 24404 9
 *dbg: outs "<<puff plant seed>> too few nutrients"
 			gsub rot
 		endi
-		inst
 		setv va40 0
 *	check population touching
 		etch 2 4 24404
@@ -182,6 +182,7 @@ scrp 2 3 24404 9
 			gsub rot
 		endi
 		mvby 0 100
+*dbg: outs "Woo! I'm about to sprout!"
 *	calculate location of new plant agent
 		setv va00 posl
 		subv va00 30
@@ -202,13 +203,53 @@ scrp 2 3 24404 9
 		mvto va00 va01
 		kill ownr
 		slow
+	elif mame "State" = "Hibernating"
+*		check once per minute
+		tick 1200
+*		only check for one year
+		setv va70 game "engine_LengthOfDayInMinutes"
+		mulv va70 game "engine_LengthOfSeasonInDays"
+		mulv va70 game "engine_NumberOfSeasons"
+		addv mame "TimesChecked" 1
+		doif mame "TimesChecked" > va70
+			sets mame "State" "CheckOnceMore"
+		else
+			sets mame "State" "Checking"
+		endi
+	endi
 
-		subr rot
+	subr rot
 *dbg: outs "<<puff plant seed>> rotting"
+*			check for touching plants or seeds
+		targ ownr
+*		va60 is "actaulyRot"
+		setv va60 0
+		doif mame "State" = "CheckOnceMore"
+*		we've waited too long alreaady
+			setv va60 1
+		endi
+		doif va60 = 0
+*		look for nearby seeds. Don't want hundreds of hibernating seeds.
+*			scattered about every two and a half pixels
+			inst
+			rnge 150
+			esee 2 3 24404
+				doif targ <> ownr
+					setv va60 1
+				endi
+			next
+		endi
+		doif va60 = 0
+*dbg: outs "I should hibernate"
+			pose 2
+			sets mame "State" "Hibernating"
+			stop
+		else
+*dbg: outs "I should not hibernate"
 			altr room ownr 4 0.003
 			kill ownr
-		retn
-	endi
+		endi
+	retn
 endm
 
 scrp 2 4 24404 9
@@ -321,7 +362,7 @@ scrp 2 4 24404 9
 		doif pose = 0
 *	haven't started wilting yet
 *	start wilitng
-			dbg: outs "start wilting"
+*dbg: outs "start wilting"
 *		switch pose of flower
 			pose 5
 *		(base's first pose is basically same as 1st wilting pose of everything else)
@@ -343,16 +384,16 @@ scrp 2 4 24404 9
 				endi
 			untl va40 = -1
 			tick 40
-			dbg: outs "done starting wilitng"
+*dbg: outs "done starting wilitng"
 		elif pose < 8
 *	continue wilting
-			dbg: outs "continue wilting"
+*dbg: outs "continue wilting"
 *		wilt flower
 			setv va39 pose
 			addv va39 1
 			pose va39
-			dbg: outs "setting flower pose to: "
-			dbg: outv va39
+*dbg: outs "setting flower pose to: "
+*dbg: outv va39
 *		wilt base
 			part 0
 			setv va39 pose
@@ -377,7 +418,7 @@ scrp 2 4 24404 9
 				endi
 			untl va40 = -1
 		else
-			DBG: outv pose
+*dbg: outv pose
 			kill ownr
 		endi
 	endi
@@ -433,6 +474,7 @@ scrp 2 21 24404 1000
 	setv va36 vely
 	reps va30
 		new: simp 2 3 24404 "puff-plant" 6 57 va24
+		sets name "State" "Drifting"
 		attr 211
 		bhvr 48
 		perm 64
