@@ -329,11 +329,6 @@ scrp 2 4 24404 9
 	retn
 endm
 
-*Stalk - LostBall
-scrp 2 4 24404 1000
-
-endm
-
 *Ball - Explode
 scrp 2 21 24404 1000
 	setv va20 posx
@@ -393,12 +388,6 @@ scrp 2 21 24404 1000
 *	let seed-ball expand to juuust the right amount
 	wait 3
 	inst
-	doif name "Free" = 0
-		targ mame "Stalk"
-		doif targ <> null
-			mesg writ targ 1000
-		endi
-	endi
 	kill ownr
 endm
 
@@ -410,7 +399,6 @@ scrp 2 21 24404 1
 		setv name "Free" 1
 *		Add physics and allow hand to carry
 		attr 198
-		mesg writ mame "Stalk" 1000
 	endi
 	doif from = pntr
 		mesg writ ownr 1000
@@ -425,7 +413,6 @@ scrp 2 21 24404 2
 		setv name "Free" 1
 *		Add physics and allow hand to carry
 		attr 198
-		mesg writ mame "Stalk" 1000
 	endi
 endm
 
@@ -437,7 +424,6 @@ scrp 2 21 24404 3
 		setv name "Free" 1
 *		Add physics and allow hand to carry
 		attr 198
-		mesg writ mame "Stalk" 1000
 	endi
 endm
 
@@ -450,7 +436,6 @@ scrp 2 21 24404 5
 		setv name "Free" 1
 *		Add physics and allow hand to carry
 		attr 198
-		mesg writ mame "Stalk" 1000
 	endi
 endm
 
