@@ -299,6 +299,9 @@ scrp 2 4 24404 9
 		addv va01 10
 		addv va02 3
 		new: simp 2 21 24404 "puff-plant" 8 49 295
+		elas 15
+		fric 40
+		accg 1
 		pose rand 0 7
 		setv name "Free" 0
 *		activateable AND suffer collisions BUT NOT suffer physics. wow.
@@ -517,8 +520,13 @@ scrp 2 21 24404 1
 *		Add physics and allow hand to carry
 		attr 198
 	endi
+	stim writ from 97 1
 	doif from = pntr
+*	explode
 		mesg writ ownr 1000
+	else
+*	call Activate 2
+		mesg writ ownr 1
 	endi
 endm
 
@@ -526,28 +534,38 @@ endm
 scrp 2 21 24404 2
 *dbg: outs "<<puff plant ball>> activate 2"
 	lock
+	stim writ from 97 1
 	doif name "Free" = 0
 		setv name "Free" 1
 *		Add physics and allow hand to carry
 		attr 198
 	endi
+	setv va00 velx
+	setv va01 vely
+	addv va00 rand -10 10
+	addv va01 rand -20 0
+	velo va00 va01
 endm
 
 *Ball - Hit
 scrp 2 21 24404 3
 *dbg: outs "<<puff plant ball>> hit"
 	lock
+	stim writ from 97 1
 	doif name "Free" = 0
 		setv name "Free" 1
 *		Add physics and allow hand to carry
 		attr 198
+	endi
+*	1/6th chance of popping
+	doif rand 0 5 = 0
+		mesg writ ownr 1000
 	endi
 endm
 
 *Ball - Picked up
 scrp 2 21 24404 5
 *dbg: outs "<<puff plant ball>> picked up"
-	inst
 	lock
 	doif name "Free" = 0
 		setv name "Free" 1
