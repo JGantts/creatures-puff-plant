@@ -38,6 +38,19 @@ elif va42 = 1
 	mvsf va01 va00
 endi
 
+scrp 2 3 24404 12
+	lock
+	snde "reat"
+	stim writ from 77 1
+	inst
+*	doif from <> null
+*		targ from
+*		chem 93 .25
+*	endi
+	slow
+	kill ownr
+	endm
+
 scrp 2 3 24404 9
 	doif pose = 0
 *	we have a feather!
@@ -178,7 +191,7 @@ scrp 2 3 24404 9
 		addv name "GoalHeight" name "CurrentPart"
 *		set state "no flower"
 		setv name "Flower" 0
-		setv name "StalkGrowthSpeed" rand 1 20
+		setv name "StalkGrowthSpeed" rand 1 5
 		tick rand 35 45
 		mvto va00 va01
 		kill ownr
@@ -238,6 +251,8 @@ scrp 2 4 24404 9
 		setv name "Free" 0
 *		activateable AND suffer collisions BUT NOT suffer physics. wow.
 		attr 68
+*debugging - let hand grad ball
+*		attr 70
 		bhvr 43
 *		doif tmvt va01 va02 = 0
 **		we've grown in a bad position, crap
@@ -330,13 +345,14 @@ scrp 2 21 24404 1000
 	reps va30
 		new: simp 2 3 24404 "puff-plant" 6 57 va24
 		attr 211
+		bhvr 48
 		perm 64
 		elas 1
 		accg 0.2
 		aero 10
 		fric 95
 		tick 4
-		setv name "StalkGrowthSpeed" mame "StalkGrowthSpeed"
+*setv name "StalkGrowthSpeed" mame "StalkGrowthSpeed"
 		mvto va20 va21
 *	Explode in a circle
 *		Random direction
