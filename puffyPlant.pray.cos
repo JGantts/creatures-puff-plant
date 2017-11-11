@@ -49,7 +49,7 @@ scrp 2 3 24404 12
 *	endi
 	slow
 	kill ownr
-	endm
+endm
 
 scrp 2 3 24404 9
 	doif pose = 0
@@ -252,7 +252,7 @@ scrp 2 4 24404 9
 *		activateable AND suffer collisions BUT NOT suffer physics. wow.
 		attr 68
 *debugging - let hand grad ball
-*		attr 70
+		attr 70
 		bhvr 43
 *		doif tmvt va01 va02 = 0
 **		we've grown in a bad position, crap
@@ -341,13 +341,16 @@ scrp 2 21 24404 1000
 	setv va28 rand 9 15
 	setv va30 va28
 	mulv va30 10
+	targ ownr
 	inst
+	setv va35 velx
+	setv va36 vely
 	reps va30
 		new: simp 2 3 24404 "puff-plant" 6 57 va24
 		attr 211
 		bhvr 48
 		perm 64
-		elas 1
+		elas 20
 		accg 0.2
 		aero 10
 		fric 95
@@ -365,7 +368,10 @@ scrp 2 21 24404 1000
 		setv va29 rand 2 va28
 		mulv va26 va29
 		mulv va27 va29
+*		add flower/ball's velocity
 *		Set velocity
+		addv va26 va35
+		addv va27 va36
 		velo va26 va27
 	repe
 *	let seed-ball expand to juuust the right amount
