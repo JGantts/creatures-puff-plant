@@ -205,6 +205,7 @@ scrp 2 3 24404 9
 
 		subr rot
 *dbg: outs "<<puff plant seed>> rotting"
+			altr room ownr 4 0.003
 			kill ownr
 		retn
 	endi
@@ -300,7 +301,7 @@ scrp 2 4 24404 9
 			endi
 			setv mame "Flower" 2
 			slow
-			tick rand 20 1000
+			tick rand 100 1000
 		endi
 	elif mame "Flower" = 2
 *	state "grew flower and it's gone"
