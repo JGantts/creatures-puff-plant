@@ -13,7 +13,7 @@ new: simp 2 3 24404 "puff-plant" 7 57 447
 sets name "State" "Drifting"
 
 *First seed is inedible and invisible to creatures. Otherwise it'd be hard to start a plant.
-attr 211
+attr 210
 *bhvr 48
 perm 64
 elas 1
@@ -100,7 +100,7 @@ scrp 2 3 24404 9
 				aero 0
 *	we still need to tick (for growing and stuff) but not nearly as fast
 *				1 seconds (probably more like 2-5(?, hmm) min in the actual agent
-				tick 20
+				tick rand 1200 4800
 			endi
 		endi
 		sets mame "State" "Checking"
@@ -198,8 +198,8 @@ scrp 2 3 24404 9
 		addv name "GoalHeight" name "CurrentPart"
 *		set state "no flower"
 		setv name "Flower" 0
-		setv name "StalkGrowthSpeed" rand 1 5
-		tick rand 35 45
+		setv name "StalkGrowthSpeed" rand 200 400
+		tick rand 350 450
 		mvto va00 va01
 		kill ownr
 		slow
@@ -235,8 +235,10 @@ scrp 2 3 24404 9
 				gsub rot
 			endi
 		next
-*		turn invisible
+*		turn invisible (to player)
 		pose 6
+*	turn invisible (to creatures)
+		attr 80
 		sets mame "State" "Hibernating"
 		stop
 	retn
@@ -258,7 +260,8 @@ scrp 2 4 24404 9
 		part 1
 		pose 4
 		slow
-		frat 10
+		frat 255
+
 		anim [5 6 7 8]
 		over
 *		sprout flower
@@ -272,11 +275,11 @@ scrp 2 4 24404 9
 			subv mame "FlowerHeight" 1
 			subv mame "CurrentHeight" 1
 			pat: move mame "FlowerPart" 0 mame "FlowerHeight"
-			wait 1
+			wait mame "StalkGrowthSpeed"
 		repe
-*		grow flower
-		frat 11
-		anim [1 2 3]
+*		grow flower (pasue afterwards before making ball agent/switching to last pose)
+		frat 255
+		anim [1 2 3 3]
 		over
 		tick 10
 		inst
@@ -474,7 +477,7 @@ scrp 2 21 24404 1000
 	reps va30
 		new: simp 2 3 24404 "puff-plant" 7 57 va24
 		sets name "State" "Drifting"
-		attr 211
+		attr 194
 		bhvr 48
 		perm 64
 		elas 20
