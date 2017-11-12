@@ -130,27 +130,27 @@ scrp 2 3 24404 9
 *		really dark?
 		doif prop va00 1 < .05
 *dbg: outs "<<puff plant seed>> too dark"
-			gsub rot
+			gsub tryHibe
 		endi
 *		too chilly?
 		doif prop va00 2 < .4
 *dbg: outs "<<puff plant seed>> too cold"
-			gsub rot
+			gsub tryHibe
 		endi
 *		really really bone dry or a bit too wet?
 		doif prop va00 3 < .00001 or prop va00 3 > .3
 *dbg: outs "<<puff plant seed>> really dry or too wet"
-			gsub rot
+			gsub tryHibe
 		endi
 *		too few nutrients?
 		doif prop va00 4 < .1
 *dbg: outs "<<puff plant seed>> too few nutrients"
-			gsub rot
+			gsub tryHibe
 		endi
 		setv va40 0
 *	check population touching
 		etch 2 4 24404
-			gsub rot
+			gsub tryHibe
 *dbg: outs "<<puff plant seed>> stop touching me!"
 		next
 *	check population for 1 within 100 pixels
@@ -160,7 +160,7 @@ scrp 2 3 24404 9
 		next
 		doif va40 > 1
 *dbg: outs "<<puff plant seed>> too crowded, 100"
-			gsub rot
+			gsub tryHibe
 		endi
 *	check population for 5 within 1000 pixels
 		rnge 1000
@@ -169,7 +169,7 @@ scrp 2 3 24404 9
 		next
 		doif va40 > 5
 *dbg: outs "<<puff plant seed>> too crowded, 1000"
-			gsub rot
+			gsub tryHibe
 		endi
 *	check map boundries
 		doif obst _UP_ < 130
@@ -218,37 +218,33 @@ scrp 2 3 24404 9
 		endi
 	endi
 
-	subr rot
+	subr tryHibe
 *dbg: outs "<<puff plant seed>> rotting"
 *			check for touching plants or seeds
 		targ ownr
-*		va60 is "actaulyRot"
-		setv va60 0
 		doif mame "State" = "CheckOnceMore"
 *		we've waited too long alreaady
-			setv va60 1
+			gsub rot
 		endi
-		doif va60 = 0
 *		look for nearby seeds. Don't want hundreds of hibernating seeds.
 *			scattered about every two and a half pixels
-			inst
-			rnge 100
-			esee 2 3 24404
-				doif targ <> ownr
-					setv va60 1
-				endi
-			next
-		endi
-		doif va60 = 0
-*dbg: outs "I should hibernate"
-			pose 6
-			sets mame "State" "Hibernating"
-			stop
-		else
-*dbg: outs "I should not hibernate"
-			altr room ownr 4 0.003
-			kill ownr
-		endi
+		inst
+		rnge 100
+		esee 2 3 24404
+			doif targ <> ownr
+				gsub rot
+			endi
+		next
+*		turn invisible
+		pose 6
+		sets mame "State" "Hibernating"
+		stop
+	retn
+
+	subr rot
+		altr room ownr 4 0.003
+		kill ownr
+		stop
 	retn
 endm
 
