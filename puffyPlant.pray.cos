@@ -384,7 +384,7 @@ scrp 2 4 24404 9
 			untl va40 = -1
 			tick 40
 *dbg: outs "done starting wilitng"
-		elif pose < 8
+		elif pose < 7
 *	continue wilting
 *dbg: outs "continue wilting"
 *		wilt flower
