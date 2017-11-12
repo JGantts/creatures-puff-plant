@@ -437,7 +437,7 @@ scrp 2 4 24404 9
 			setv mame "GoalHeight" 0
 			stop
 		endi
-		doif tmvb 0 -1 = 0
+		doif tmvb 0 -1 = 0 or tmvb 0 -30 = 0
 			setv mame "GoalHeight" 0
 			stop
 		endi
