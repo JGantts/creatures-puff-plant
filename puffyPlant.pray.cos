@@ -558,19 +558,19 @@ endm
 
 *Ball - Picked up
 scrp 2 21 24404 5
-	mesg writ ownr 1000
-endm
-
-*Ball - Picked up
-scrp 2 21 24404 9
 *dbg: outs "<<puff plant ball>> picked up"
 	lock
 	doif name "Free" = 0
 		setv name "Free" 1
 *		Add physics and allow hand to carry
 		attr 198
-
+		tick rand 1200 2400
 	endi
+endm
+
+*Ball - timer
+scrp 2 21 24404 9
+	mesg writ ownr 1000
 endm
 
 rscr
