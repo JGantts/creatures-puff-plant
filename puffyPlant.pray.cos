@@ -1,11 +1,11 @@
 **CAOS2PRAY
-*# Pray-File "puffyPlant.agents"
-*# DS-Name "Puffy Plant"
+*# Pray-File "puff-plant.agents"
+*# DS-Name "Puff Plant"
 *# Agent Animation File = "puff-plant.c16"
 *# Agent Sprite First Image = 40
-*# desc = "A plant which is puffy."
+*# desc = "A desert-loving plant. It needs a hot dry environment to survive.\n\nImages by Uzag.\nCode by Zzzzoot."
 
-*# attach puff-plant.c16
+*# attach puff-plant.c16 puff-plant.catalogue
 
 new: simp 2 3 24404 "puff-plant" 7 57 447
 
