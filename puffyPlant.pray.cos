@@ -99,9 +99,14 @@ scrp 2 3 24404 9
 				over
 				aero 0
 *	we still need to tick (for growing and stuff) but not nearly as fast
-*				1 seconds (probably more like 2-5(?, hmm) min in the actual agent
-				tick rand 1200 4800
-			endi
+				doif totl 2 3 24404 = 0 and totl 2 4 24404 = 0
+*					we're the first. Grow soon (better user experience)
+					tick 20
+				else
+*					1 seconds (probably more like 2-5(?, hmm) min in the actual agent
+					tick rand 1200 4800
+				endi
+			endis
 		endi
 		sets mame "State" "Checking"
 		stop
@@ -223,7 +228,7 @@ scrp 2 3 24404 9
 *			check for touching plants or seeds
 		targ ownr
 		doif mame "State" = "CheckOnceMore"
-*		we've waited too long alreaady
+*		we've waited too long already
 			gsub rot
 		endi
 *		look for nearby seeds. Don't want hundreds of hibernating seeds.
@@ -385,7 +390,7 @@ scrp 2 4 24404 9
 					setv va40 pnxt va40
 				endi
 			untl va40 = -1
-			tick 40
+			tick 400
 *dbg: outs "done starting wilitng"
 		elif pose < 7
 *	continue wilting
