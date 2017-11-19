@@ -106,7 +106,7 @@ scrp 2 3 24404 9
 *					1 seconds (probably more like 2-5(?, hmm) min in the actual agent
 					tick rand 1200 4800
 				endi
-			endis
+			endi
 		endi
 		sets mame "State" "Checking"
 		stop
