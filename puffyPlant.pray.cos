@@ -3,7 +3,7 @@
 *# DS-Name "Puff Plant"
 *# Agent Animation File = "puff-plant.c16"
 *# Agent Sprite First Image = 40
-*# desc = "A desert-loving plant. It needs a hot dry environment to survive.\n\nImages by Uzag.\nCode by Zzzzoot."
+*# desc = "Version 1.0\n\nA desert-loving plant. It needs a hot dry environment to survive.\n\nImages by Uzag.\nCode by Zzzzoot."
 
 *# attach puff-plant.c16 puff-plant.catalogue
 
